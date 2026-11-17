@@ -1,0 +1,11 @@
+{
+  "domain": "shelfready.example.com",
+  "challengeAlias": "example-shelfready.dedyn.io",
+  "dnsProvider": "desec",
+  "tokenFile": "~/.config/shelfready/acme.env",
+  "tlsDir": "~/.config/shelfready/tls",
+  "acmeHome": "~/.config/shelfready/acme",
+  "acmeSh": "/usr/bin/acme.sh",
+  "email": "",
+  "dnsWaitSeconds": 120
+}

@@ -1,0 +1,32 @@
+{
+  "appName": "ShelfReady",
+  "storeName": "Cheese & Crackers",
+  "logoMark": "C&C",
+  "tagline": "Real food, really good.",
+  "footerLine": "Cheese & Crackers, Inc. 1715 W Kirby Ave., Champaign, IL",
+  "colors": {
+    "bg": "#f5f2eb",
+    "paper": "#fffdf8",
+    "ink": "#111111",
+    "red": "#c82c2c",
+    "redDark": "#a82020",
+    "yellow": "#e8c840",
+    "yellowDark": "#d4b730",
+    "inkFaint": "#d0cdc5",
+    "inkMid": "#555550"
+  },
+  "fonts": {
+    "display": {
+      "family": "Fraunces",
+      "normal": "src/server/static/fonts/Fraunces.ttf",
+      "italic": "src/server/static/fonts/Fraunces-Italic.ttf",
+      "weights": "300 900"
+    },
+    "body": {
+      "family": "Space Grotesk",
+      "normal": "src/server/static/fonts/SpaceGrotesk.ttf",
+      "italic": "",
+      "weights": "300 700"
+    }
+  }
+}

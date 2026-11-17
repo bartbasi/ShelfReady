@@ -1,0 +1,27 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Store data and secrets: never in git
+reference/
+test-invoices/
+data/
+backups/
+*.env
+.env*
+config/local/
+*.sqlite3
+*.db
+logs/
+*.log
+
+# Editor and OS
+.DS_Store
+*.swp
+
+# LibreOffice lock files (hold a user and host name)
+.~lock.*
+
+# Private store repo (its own git repo, not part of this one)
+/store/

@@ -1,0 +1,32 @@
+#!/bin/sh
+# ShelfReady commit-msg: refuses a commit message that holds store data. That is any term in the
+# private list ~/.config/shelfready/store-terms.txt, or a store network value: the 192.168/16 prefix,
+# or anything in the private list ~/.config/shelfready/store-net.txt. The matching is pre-commit's own,
+# from scripts/git-hooks/store-checks.sh. Never prints a term or the line that matched.
+set -eu
+hooks=$(cd "$(dirname "$0")" && pwd)
+. "$hooks/store-checks.sh"
+
+msg=${1:?commit-msg: git gave no message file.}
+work=$(mktemp -d)
+cleanup() { rm -rf "$work"; }
+trap cleanup EXIT
+trap 'cleanup; exit 130' INT TERM HUP
+
+# The message as git will keep it: everything above the scissors line that commit -v adds (the diff
+# under it is not part of the message). Comment lines are checked too: with -m or -F git keeps them.
+sed '/^.* -\{24\} >8 -\{24\}$/,$d' "$msg" > "$work/message"
+
+if ! store_terms_load "$work/terms"; then
+  echo "commit-msg: $STORE_TERMS_FILE exists but cannot be read. Fix its permissions." >&2; exit 1
+fi
+if store_terms_match "$work/terms" "$work/message"; then
+  echo "commit-msg: the commit message matches ~/.config/shelfready/store-terms.txt (store data). Reword it." >&2; exit 1
+fi
+if ! store_net_load "$work/net"; then
+  echo "commit-msg: $STORE_NET_FILE exists but cannot be read. Fix its permissions." >&2; exit 1
+fi
+store_net_note commit-msg
+if store_net_match "$work/net" "$work/message"; then
+  echo "commit-msg: the commit message names a store network address, the store's host name or the PC's name. Reword it." >&2; exit 1
+fi

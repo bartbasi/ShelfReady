@@ -1,0 +1,32 @@
+{
+  "store": "Cheese & Crackers, Inc.",
+  "source": "Bart's rules from November 9, 2026 (store/docs/DECISIONS.md, Fish prices in Mailchimp). The date line style copies the small red labels already in the fish email.",
+  "listNote": "list.id here is a placeholder. The real fish list id goes in config/local/mailchimp.json, out of git: { \"list\": { \"id\": \"...\" } }.",
+  "list": {
+    "id": "0000000000",
+    "name": "Cheese & Crackers Fresh Fish, Steak & Special Order List"
+  },
+  "titlePrefix": "Fish Email",
+  "timeZone": "America/Chicago",
+  "fishDays": ["Mon", "Wed", "Fri"],
+  "sendTime": "08:00",
+  "safeMarginMinutes": 60,
+  "checks": [
+    { "days": ["Sun", "Tue", "Thu"], "time": "18:00" },
+    { "days": ["Mon", "Wed", "Fri"], "time": "06:00", "scheduleDrafts": true }
+  ],
+  "sentCheckTime": "08:15",
+  "driftMaxPerEdit": 10,
+  "newFishSection": "Additional fresh fish",
+  "matchesFile": "data/mailchimp/fish-matches.json",
+  "units": {
+    "lb": "per_pound",
+    "unit": "each",
+    "can": "each"
+  },
+  "dateLine": {
+    "class": "sr-fish-date",
+    "topTableClass": "wrap",
+    "style": "padding:12px 20px;border-bottom:3px solid #111;background:#f5f2eb;font-family:'Space Grotesk',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#c82c2c;text-align:center;"
+  }
+}

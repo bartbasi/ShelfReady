@@ -1,0 +1,73 @@
+ShelfReady
+Copyright 2026 Cheese & Crackers, Inc.
+
+Designed and written by Bart Basi, with assistance from Claude.
+
+ShelfReady is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License, version 3, as published by the
+Free Software Foundation, with the additional terms below. The full license is
+in the file LICENSE.
+
+ShelfReady is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+Source code: https://github.com/bartbasi/ShelfReady
+Feedback: bart@crackerscheese.com
+
+
+Additional terms (GNU General Public License, version 3, section 7)
+
+These terms apply to all of ShelfReady: its code, web pages and documents.
+
+1. Author attribution (section 7(b)). Any work based on ShelfReady, in whole
+   or in part, must keep this author attribution, which credits Bart Basi as
+   the creator of the original ShelfReady and Cheese & Crackers, Inc. as its
+   copyright holder:
+
+       Based on ShelfReady, designed and written by Bart Basi, with
+       assistance from Claude. Copyright 2026 Cheese & Crackers, Inc.
+
+   (a) in its source code, by keeping this NOTICE file or its full text; and
+   (b) if the work has an interactive user interface, among the Appropriate
+       Legal Notices it displays (for example on an About, Credits or License
+       screen, or at the foot of its web page), where its users can readily
+       see it.
+
+   A store's own branding may change the store name, colours and fonts the
+   app shows, but not this attribution.
+
+2. Marking modified versions (sections 7(c) and 7(d)). A modified version
+   must be marked as changed from the original and must not be presented as
+   the original ShelfReady. Beyond the attribution in term 1, the names
+   Cheese & Crackers, Inc. and Bart Basi may not be used to promote a modified
+   version or to suggest that it was made or endorsed by Cheese & Crackers,
+   Inc. or Bart Basi.
+
+3. Name (sections 7(c) and 7(e)). This license grants no rights under
+   trademark law to the name "ShelfReady". A modified version you distribute
+   is marked as different from the original by using its own name instead.
+   Saying that your work is "based on ShelfReady" is allowed, and term 1
+   requires it.
+
+
+Not affiliated
+
+ShelfReady is not affiliated with, endorsed by, or supported by Square,
+Mailchimp, Tor-rey or Anthropic. Square, Mailchimp, Tor-rey, ScaleLink and
+Claude are trademarks of their owners, used here only to say which services
+and scales this works with. ShelfReady reaches the scales only through
+ScaleConnect, a separate program with its own license.
+
+
+Third party parts
+
+ShelfReady runs on Node.js and uses packages from npm, each under its own
+license, as listed in package-lock.json. They are installed separately with
+npm and keep their own licenses and notices. Among them, sharp includes
+prebuilt libvips binaries under the GNU Lesser General Public License,
+version 3.
+
+The fonts Fraunces and Space Grotesk are under the SIL Open Font License,
+version 1.1. Their license texts travel with the font files in
+src/server/static/fonts/.

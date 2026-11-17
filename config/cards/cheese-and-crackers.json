@@ -1,0 +1,265 @@
+{
+  "store": "Cheese & Crackers, Inc.",
+  "source": "Values copied from the cc-case-cards skill, section Building the sheets. Do not change the geometry: it was tuned against printed output.",
+  "mark": "C&C",
+  "tagline": "Real food, really good.",
+  "eyebrows": [
+    "01 / CHEESE",
+    "02 / CURED MEAT",
+    "03 / CRACKERS",
+    "04 / PASTA",
+    "05 / RICE",
+    "06 / TOMATOES",
+    "07 / TINNED FISH",
+    "08 / CONDIMENT",
+    "09 / PANTRY",
+    "10 / SWEETS",
+    "11 / BEVERAGE",
+    "12 / SEAFOOD"
+  ],
+  "colors": {
+    "ink": "111111",
+    "cream": "f5f2eb",
+    "yellow": "e8c840",
+    "white": "ffffff",
+    "red": "c82c2c",
+    "inkMid": "555550",
+    "inkDim": "888880",
+    "footDim": "9a9790"
+  },
+  "fonts": {
+    "display": "Fraunces",
+    "body": "Space Grotesk"
+  },
+  "geometry": {
+    "sheetWidth": 12240,
+    "sheetHeight": 15840,
+    "labelWidth": 5400,
+    "gutter": 360,
+    "marginLeftRight": 547,
+    "marginTop": 288,
+    "marginBottom": 288,
+    "padX": 197,
+    "rowHeights": [
+      605,
+      0,
+      835,
+      3134,
+      730,
+      480
+    ],
+    "exactRow": 3,
+    "history": {
+      "note": "Cards built on or before October 28, 2026 used a taller name block. The change landed by October 29. Only the name block differs. Kept so old sheets can be rebuilt and checked; do not use for new cards.",
+      "untilOct28": {
+        "nameRowHeight": 1632,
+        "nameMargins": {
+          "top": 170,
+          "bottom": 140
+        },
+        "eyebrowAfter": 90,
+        "producerBefore": 110
+      }
+    }
+  },
+  "blocks": {
+    "header": {
+      "fill": "ink",
+      "margins": {
+        "top": 120,
+        "bottom": 110
+      },
+      "mark": {
+        "font": "display",
+        "bold": true,
+        "size": 24,
+        "color": "cream"
+      },
+      "origin": {
+        "font": "body",
+        "bold": true,
+        "size": 13,
+        "color": "yellow",
+        "characterSpacing": 24
+      }
+    },
+    "name": {
+      "fill": "cream",
+      "margins": {
+        "top": 105,
+        "bottom": 85
+      },
+      "eyebrowAfter": 55,
+      "eyebrow": {
+        "font": "body",
+        "bold": true,
+        "size": 12,
+        "color": "red",
+        "characterSpacing": 26
+      },
+      "nameLine": 370,
+      "n1": {
+        "font": "display",
+        "bold": true,
+        "size": 39,
+        "color": "ink"
+      },
+      "n2": {
+        "font": "display",
+        "bold": true,
+        "italics": true,
+        "size": 39,
+        "color": "red"
+      },
+      "producerBefore": 70,
+      "producer": {
+        "font": "body",
+        "size": 15,
+        "color": "inkMid"
+      }
+    },
+    "specs": {
+      "fill": "yellow",
+      "margins": {
+        "top": 100,
+        "bottom": 110
+      },
+      "labelAfter": 50,
+      "label": {
+        "font": "body",
+        "bold": true,
+        "size": 18,
+        "color": "inkDim",
+        "characterSpacing": 20
+      },
+      "value": {
+        "font": "display",
+        "bold": true,
+        "size": 22,
+        "color": "ink"
+      }
+    },
+    "copy": {
+      "fill": "white",
+      "margins": {
+        "top": 150,
+        "bottom": 150
+      },
+      "line": 264,
+      "paragraphAfter": 90,
+      "text": {
+        "font": "body",
+        "size": 24,
+        "color": "ink"
+      }
+    },
+    "price": {
+      "fill": "yellow",
+      "margins": {
+        "top": 120,
+        "bottom": 120
+      },
+      "price": {
+        "font": "display",
+        "bold": true,
+        "size": 36,
+        "color": "ink"
+      },
+      "unit": {
+        "font": "body",
+        "bold": true,
+        "size": 24,
+        "color": "ink",
+        "characterSpacing": 20
+      }
+    },
+    "footer": {
+      "fill": "ink",
+      "margins": {
+        "top": 100,
+        "bottom": 120
+      },
+      "tagline": {
+        "font": "display",
+        "bold": true,
+        "italics": true,
+        "size": 18,
+        "color": "yellow"
+      },
+      "code": {
+        "font": "body",
+        "size": 18,
+        "color": "footDim",
+        "characterSpacing": 16
+      }
+    }
+  },
+  "limits": {
+    "appliesTo": "Newly written copy only. Copy imported from existing cards, or edited by a person in the app, is never flagged for length; only the rendered clip and line checks in scripts/cards/verify.ts judge it. One existing card has 364 characters and fits in 10 lines.",
+    "note": "Measured November 4, 2026 with scripts/cards/measure-limits.ts: LibreOffice 25.2 with Fraunces and Space Grotesk from Google Fonts, against 162 reference cards and 468 probe cards of real card wording. Characters count spaces. The rendered checks in scripts/cards/verify.ts are the real rule; these numbers are for writing copy. See store/docs/CARDS.md.",
+    "copy": {
+      "paragraphs": 2,
+      "maxLines": 10,
+      "maxLinesHow": "Copy row is EXACT 3134 twips. Less 150 top and 150 bottom padding and one 90 paragraph gap leaves 2744; at 264 a line that is 10 lines.",
+      "targetChars": 340,
+      "maxChars": 360,
+      "evidence": "Reference copy runs 185 to 364 characters (median 295); 4 cards render at 10 lines (340 to 364), 43 at 9. Probes: every probe up to 362 characters fit in 10 lines, the first failure was at 363, and every probe up to 347 fit in 9 lines."
+    },
+    "name": {
+      "oneLineChars": 24,
+      "maxLines": 2,
+      "maxChars": 45,
+      "evidence": "n1 + n2. Probes: every name up to 24 characters set on one line, the first wrap was at 27; every name up to 47 fit in two lines, the first three-line name was at 50. Reference names run 6 to 31. A three-line name in both card pairs pushes the sheet to a second page."
+    },
+    "producer": {
+      "maxChars": 60,
+      "evidence": "One line up to 66 characters in every probe; the first wrap was at 70. Reference producers run 5 to 46."
+    },
+    "specValue": {
+      "targetChars": 11,
+      "maxChars": 15,
+      "evidence": "Each value is centred in a third of the card (83.4 pt). Every value up to 11 characters stayed 6 pt inside its third; from 12 on it can crowd its neighbour. Up to 15 prints fine when the neighbouring values are short."
+    },
+    "specLabel": {
+      "maxChars": 12,
+      "evidence": "Every label up to 13 characters stayed inside its third. Reference labels run 3 to 9."
+    }
+  },
+  "copyWriting": {
+    "about": "How new card copy is written for a product with no card, from the cc-case-cards skill, section Label copy. src/copy/prompt.ts adds the field rules and the limits above, and src/copy/checks.ts checks the answer against the same limits. flagPhrases: words that read like marketing; a card that uses one is sent back once. None of them appears on the 162 existing cards.",
+    "voice": [
+      "Write in the owner's voice: plain, specific, a little dry, never marketing copy.",
+      "He has sold this category for 16 years and edits every card, so give him a real draft rather than a safe one.",
+      "Two short paragraphs. The first says what the product is and what sets it apart: who makes it, where and how, and its unique selling point when it has one.",
+      "The second says how it eats or how to use it: texture, flavour, what it goes with, how to cook or serve it.",
+      "Say what the thing is and does. Leave out praise.",
+      "British spelling, as on the existing cards: flavour, colour, centre, organised.",
+      "No em dashes and no double hyphens. Use a full stop or a comma instead."
+    ],
+    "accuracy": [
+      "Accuracy is the point of failure. A wrong claim on a printed card is worse than a missing one.",
+      "Protected designations (DOP, IGP, AOP and the like) and the country of origin must be checked, not assumed.",
+      "Past mistakes of this kind: Black Kassel is Canadian despite the German name, Molinari coppa is American, Lamb Chopper is Dutch-made, Tomme de Savoie is IGP and not AOP, Port Salut holds no protected status.",
+      "Packaging claims (organic, gluten free, aged so many months) and cook times must come from the maker or the package, never from a guess."
+    ],
+    "origin": [
+      "PRODUCT OF and the country, or the US state, in capitals: PRODUCT OF FRANCE, PRODUCT OF WISCONSIN.",
+      "Use each country's official name: PRODUCT OF TÜRKIYE, not TURKEY.",
+      "When the origin varies by delivery or cannot be confirmed, write SEE CASE FOR ORIGIN, with BOX, BAG, JAR, PACK or BOTTLE in place of CASE when that is what it comes in."
+    ],
+    "fields": [
+      "producer: the maker, farm or fishery, a middle dot, then the town and region: Maker · Town, Region. Leave out the town when you cannot confirm it. Never the supplier or distributor that sent the invoice. For fresh fish with no known farm or boat, say how it was raised or caught and where, for example Farmed · Aegean Sea.",
+      "category: SEAFOOD covers fresh fish and shellfish. PANTRY is the catch-all for shelf-stable goods that fit no named group, such as chips, nuts and spices. OTHER is only for a product unlike every category.",
+      "unit: metric when the package gives it, in words, as on the existing cards: 40 GRAMS, 250 ML.",
+      "Spec labels are one short word in capitals, such as MILK, AGE, STYLE, CUT, GRAIN, HEAT, DIE, COOK, SIZE or USE. Values are short, such as Cow’s, 20 Days +, To Order.",
+      "Goods sold by weight and cut at the counter usually carry CUT: To Order."
+    ],
+    "flagPhrases": [
+      "indulge", "indulgent", "elevate", "elevated", "decadent", "exquisite", "mouthwatering", "mouth-watering",
+      "irresistible", "delectable", "scrumptious", "to die for", "treat yourself", "must-try", "world-class",
+      "unparalleled", "artisanal", "gourmet", "taste of luxury", "luxurious", "heavenly", "delicious", "amazing",
+      "unique", "premium", "perfect for", "the perfect"
+    ],
+    "curlyApostrophes": true
+  }
+}

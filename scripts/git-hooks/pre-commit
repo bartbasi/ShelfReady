@@ -1,0 +1,130 @@
+#!/bin/sh
+# ShelfReady pre-commit: routine checks on exactly what is staged.
+# 1. Store data by path and by binary type. 2. Secrets. 3. Store data by content
+# (a private list of terms outside the repo, and the store's network values).
+# 4. Typecheck and tests, run on a copy of the staged files, so unfinished work
+# elsewhere in the tree neither blocks nor sneaks into a commit.
+# The store data matching is shared with commit-msg: scripts/git-hooks/store-checks.sh.
+set -eu
+hooks=$(cd "$(dirname "$0")" && pwd)
+. "$hooks/store-checks.sh"
+cd "$(git rev-parse --show-toplevel)"
+
+work=$(mktemp -d)
+cleanup() { rm -rf "$work"; }
+trap cleanup EXIT
+trap 'cleanup; exit 130' INT TERM HUP
+
+# Plain diff output whatever the user's git config says.
+gdiff() { git -c core.quotePath=false diff --cached --no-color --no-ext-diff --no-textconv --no-renames "$@"; }
+
+# Staged paths, NUL separated so odd names cannot slip past. T catches a symlink
+# turned into a file.
+gdiff --name-only -z --diff-filter=ACMT > "$work/paths"
+
+# 1. No control characters (line breaks, tabs) in staged file names: they would
+# split the line-based checks below.
+if tr '\0' '\n' < "$work/paths" | LC_ALL=C grep -q '[[:cntrl:]]'; then
+  echo "pre-commit: a staged file name holds a control character. Rename it." >&2; exit 1
+fi
+if [ "$(tr -cd '\0' < "$work/paths" | wc -c)" -ne "$(tr '\0' '\n' < "$work/paths" | grep -c '')" ]; then
+  echo "pre-commit: a staged file name holds a line break. Rename it." >&2; exit 1
+fi
+# 1a. Store data folders, or anything named like them (a symlink called data).
+if grep -zqE '^(reference|test-invoices|data|backups)(/|$)' "$work/paths"; then
+  echo "pre-commit: store data is staged (reference, test-invoices, data or backups). Unstage it." >&2; exit 1
+fi
+# 1b. Photos, scans and office files: invoices and cards travel this way. Allowed
+# only under test/fixtures/ (exact case).
+if grep -zvE '^test/fixtures/' "$work/paths" | grep -zqiE '\.(jpe?g|png|heic|heif|webp|gif|tiff?|bmp|pdf|docx?|xlsx?|pptx?|odt|ods|zip|gz|7z|csv|sqlite3?|db)$'; then
+  echo "pre-commit: a photo, PDF, office file, archive or data file is staged outside test/fixtures/. Unstage it." >&2; exit 1
+fi
+# 1c. Anything git treats as binary (whatever its name, and whatever a staged
+# .gitattributes says) is refused outside test/fixtures/, because the content
+# scans below cannot read it. The one other place: font files (and only font
+# files) in the app's bundled font folder.
+gdiff --numstat -z --diff-filter=ACMT > "$work/numstat"
+tr '\0' '\n' < "$work/numstat" | awk -F'\t' '$1=="-" && $2=="-" {print $3}' > "$work/binary"
+if grep -vE '^test/fixtures/' "$work/binary" | grep -vE '^src/server/static/fonts/[A-Za-z0-9_-]+\.(ttf|otf|woff|woff2)$' | grep -q .; then
+  echo "pre-commit: a binary file is staged outside test/fixtures/ (or a non-font file in the font folder). Unstage it." >&2; exit 1
+fi
+# 1d. A binary fixture must not be a copy of a real invoice or card.
+if [ -s "$work/binary" ] && { [ -d test-invoices ] || [ -d reference ]; }; then
+  find test-invoices reference -type f -exec git hash-object {} + 2>/dev/null | sort -u > "$work/real" || true
+  while IFS= read -r p; do
+    if git rev-parse ":$p" | grep -qxFf "$work/real"; then
+      echo "pre-commit: $p is a copy of a real invoice or card. Unstage it." >&2; exit 1
+    fi
+  done < "$work/binary"
+fi
+# 1e. Symlinks in the index must stay inside the repo.
+git ls-files -s -z | tr '\0' '\n' | awk '$1=="120000" {print $2}' | while IFS= read -r sha; do
+  target=$(git cat-file -p "$sha")
+  case "$target" in
+    /*|..|../*|*/../*|*/..) echo "pre-commit: a staged symlink points outside the repo ($target). Remove it." >&2; exit 1 ;;
+  esac
+done || exit 1
+
+# Added lines only, marked so a line that itself starts with "+" is still seen.
+# The diff goes to a file first, so a git failure stops the commit.
+gdiff -U0 --diff-filter=ACMT --output-indicator-new='>' > "$work/diff"
+grep -E '^>' "$work/diff" > "$work/added" || true
+
+# 2. Secrets: Anthropic keys, Square access tokens and app secrets, Mailchimp API keys, private keys, bearer headers with a value.
+if grep -qE 'sk-ant-[A-Za-z0-9_-]{10,}|[0-9a-f]{32}-us[0-9]{1,3}|EAAA[A-Za-z0-9_-]{30,}|(sandbox-)?sq0(atp|csp|csb)-[A-Za-z0-9_-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|Bearer [A-Za-z0-9._-]{20,}' "$work/added"; then
+  echo "pre-commit: something that looks like a secret is staged. Remove it." >&2; exit 1
+fi
+
+# 2b. Only the read-only live module may name the live Square token, so new code
+# cannot send the full-access live token around it. The live host may be named
+# there and in src/square/origins.ts, the app's one pinned origin for live Square
+# (going live, November 16), which client.ts and writer.ts check every call against.
+gdiff -U0 --diff-filter=ACMT --output-indicator-new='>' -- . \
+  ':(exclude)scripts/square/live-readonly.ts' ':(exclude)scripts/git-hooks/pre-commit' \
+  ':(exclude)test/square-live-readonly.test.ts' > "$work/livediff"
+if grep -E '^>' "$work/livediff" | grep -qE 'SQUARE_LIVE_READONLY_TOKEN'; then
+  echo "pre-commit: only scripts/square/live-readonly.ts may name the live Square read-only token." >&2; exit 1
+fi
+gdiff -U0 --diff-filter=ACMT --output-indicator-new='>' -- . \
+  ':(exclude)scripts/square/live-readonly.ts' ':(exclude)src/square/origins.ts' ':(exclude)scripts/git-hooks/pre-commit' \
+  ':(exclude)test/square-live-readonly.test.ts' > "$work/livehost"
+if grep -E '^>' "$work/livehost" | grep -qE 'connect\.squareup\.com'; then
+  echo "pre-commit: only scripts/square/live-readonly.ts and src/square/origins.ts may name the live Square host." >&2; exit 1
+fi
+
+# 3. Store data by content: fixed strings, case-insensitive, from a private list.
+tr '\0' '\n' < "$work/paths" > "$work/pathlines"
+if ! store_terms_load "$work/terms"; then
+  echo "pre-commit: $STORE_TERMS_FILE exists but cannot be read. Fix its permissions." >&2; exit 1
+fi
+if store_terms_match "$work/terms" "$work/added"; then
+  echo "pre-commit: staged text matches ~/.config/shelfready/store-terms.txt (store data). Use invented values." >&2; exit 1
+fi
+if store_terms_match "$work/terms" "$work/pathlines"; then
+  echo "pre-commit: a staged file name matches ~/.config/shelfready/store-terms.txt (store data). Rename it." >&2; exit 1
+fi
+rm -f "$work/terms"
+
+# 3b. The store's network values: the 192.168/16 prefix, and the private list
+# ~/.config/shelfready/store-net.txt (store-checks.sh), so the values never sit in the repo.
+# Refused in every staged file name and in the added lines of every file, docs included. The
+# store's own notes live in the private store/ repo, which this repo ignores.
+if ! store_net_load "$work/net"; then
+  echo "pre-commit: $STORE_NET_FILE exists but cannot be read. Fix its permissions." >&2; exit 1
+fi
+store_net_note pre-commit
+if store_net_match "$work/net" "$work/pathlines"; then
+  echo "pre-commit: a staged file name holds a store network address, host name or PC name. Rename it." >&2; exit 1
+fi
+gdiff -U0 --diff-filter=ACMT --output-indicator-new='>' -- . > "$work/netdiff"
+grep -E '^>' "$work/netdiff" > "$work/netadded" || true
+if store_net_match "$work/net" "$work/netadded"; then
+  echo "pre-commit: staged text names a store network address, the store's host name or the PC's name. Use invented values (10.0.0.x, shelfready.example.com) or the git-ignored config/local/server.json." >&2; exit 1
+fi
+
+# 4. Typecheck and tests on a copy of the index. node_modules and the gitignored
+# reference cards are linked in so the same tests run as in the tree.
+git checkout-index -a --prefix="$work/tree/"
+ln -s "$PWD/node_modules" "$work/tree/node_modules"
+[ -d reference ] && ln -s "$PWD/reference" "$work/tree/reference"
+(cd "$work/tree" && nice -n 19 npm run --silent check)
